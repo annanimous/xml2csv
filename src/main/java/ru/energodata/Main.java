@@ -23,14 +23,14 @@
         } else {
             convertxml2csv(args[0], args[1]);
         }
+        //convertxml2csv("C:\\_data\\xml_arch", "C:\\_data\\xml_arch.csv");
     }
-            private static void convertxml2csv(String arg, String arg1) {
+            private static void convertxml2csv(String xmlpathstring, String csvfilepathstring) {
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 factory.setValidating(true);
                 factory.setNamespaceAware(false);
                 SAXParser parser = null;
-                //File xmlpath = new File("C:\\_data\\xml_arch");
-                File xmlpath = new File(arg);
+                File xmlpath = new File(xmlpathstring);
                 try {
                     parser = factory.newSAXParser();
                 } catch (ParserConfigurationException | SAXException e) {
@@ -48,15 +48,14 @@
                             }
                         }
                     }
-                    writeToCSV(otpravlenieList, arg1);
+                    writeToCSV(otpravlenieList, csvfilepathstring);
                 }
             }
-
             private static void writeToCSV(ArrayList<Otpravlenie> otpravlenieList, String csvfilepath)
         {
             try
             {
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvfilepath/*"C:\\_data\\xml_arch.csv"*/), "UTF-8"));
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvfilepath), "UTF-8"));
                 for (Otpravlenie otpravlenie : otpravlenieList)
                 {
                     StringBuilder oneLine = new StringBuilder();
@@ -95,7 +94,6 @@
                     /*oneLine.append(otpravlenie.getName()!= null  ? "" : otpravlenie.getName());
                     oneLine.append(CSV_SEPARATOR);
                     oneLine.append(otpravlenie.getPhone()!= null  ? "" : otpravlenie.getPhone());*/
-
                     bw.write(oneLine.toString());
                     bw.newLine();
                 }
@@ -106,9 +104,7 @@
             catch (FileNotFoundException e){e.printStackTrace();}
             catch (IOException e){e.printStackTrace();}
         }
-        ////////////////////////
     }
-// http://java.sun.com/j2se/1.4.2/docs/api/org/xml/sax/helpers/DefaultHandler.html
     class MyParser extends DefaultHandler {
     private Otpravlenie otpravlenie;
     private boolean bBuilding = false;
