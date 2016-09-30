@@ -135,9 +135,12 @@
             otpravlenie.setZip(attributes.getValue("zip"));
             //System.out.println("zip " + attributes.getValue("zip"));
         }
-        /*if (qName.equals("post_index")) {
-            System.out.println("post_index " + attributes.getValue("value"));
-        }*/
+        if (otpravlenie.getBarcode()==null||otpravlenie.getBarcode().length()<6)
+        {
+         if       (qName.equals("post_index")) {
+            otpravlenie.setBarcode(attributes.getValue("value"));
+            //System.out.println("post_index " + attributes.getValue("value"));
+        }}
         if (qName.equals("region")) {
             otpravlenie.setRegion(attributes.getValue("value"));
             otpravlenie.setRegion_socr(attributes.getValue("socr"));
