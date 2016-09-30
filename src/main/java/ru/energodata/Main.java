@@ -1,6 +1,8 @@
         package ru.energodata;
 
         import java.io.*;
+        import java.nio.file.InvalidPathException;
+        import java.nio.file.Paths;
         import java.util.ArrayList;
         import javax.xml.parsers.ParserConfigurationException;
         import javax.xml.parsers.SAXParserFactory;
@@ -21,10 +23,15 @@
             System.out.println("Usage: xml2csv <path to .xml files> <resulting .csv file name>");
             System.out.println("Example: xml2csv C:\\_data\\xml_arch C:\\_data\\xml_arch.csv");
         } else {
+            try {
+                Paths.get(args[0]);
+            }
+            catch (InvalidPathException |  NullPointerException ex) {
+                System.out.println("<" + args[0] + "> is not correct path");
+            }
             convertxml2csv(args[0], args[1]);
         }
-        //convertxml2csv("C:\\_data\\xml_arch", "C:\\_data\\xml_arch.csv");
-    }
+        }
             private static void convertxml2csv(String xmlpathstring, String csvfilepathstring) {
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 factory.setValidating(true);
@@ -36,20 +43,24 @@
                 } catch (ParserConfigurationException | SAXException e) {
                     e.printStackTrace();
                 }
-                if (xmlpath.listFiles() != null)
+                if (xmlpath.listFiles() != null && xmlpath.listFiles().length > 0)
                 {
                     for (File file : xmlpath.listFiles()) {
                         if (!file.isDirectory() && file.getName().endsWith("xml")) {
                             try {
-                                parser.parse(file, new MyParser());
+                                if (parser != null) {
+                                    parser.parse(file, new MyParser());
+                                }
+                                else throw new ParserConfigurationException();
                             }
-                            catch (IOException | SAXException e) {
+                            catch (IOException | SAXException | ParserConfigurationException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                     writeToCSV(otpravlenieList, csvfilepathstring);
                 }
+                else System.out.println("No .xml files found in: <" + xmlpathstring + ">");
             }
             private static void writeToCSV(ArrayList<Otpravlenie> otpravlenieList, String csvfilepath)
         {
@@ -99,10 +110,7 @@
                 }
                 bw.flush();
                 bw.close();
-            }
-            catch (UnsupportedEncodingException e) {e.printStackTrace();}
-            catch (FileNotFoundException e){e.printStackTrace();}
-            catch (IOException e){e.printStackTrace();}
+            } catch (IOException e){e.printStackTrace();}
         }
     }
     class MyParser extends DefaultHandler {
