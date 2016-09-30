@@ -59,7 +59,7 @@
                 BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(csvfilepath/*"C:\\_data\\xml_arch.csv"*/), "UTF-8"));
                 for (Otpravlenie otpravlenie : otpravlenieList)
                 {
-                    StringBuffer oneLine = new StringBuffer();
+                    StringBuilder oneLine = new StringBuilder();
                     oneLine.append(otpravlenie.getBarcode() !=null ? otpravlenie.getBarcode() : "");
                     oneLine.append(CSV_SEPARATOR);
                     oneLine.append(otpravlenie.getReliability() != null ? otpravlenie.getReliability() : "");
